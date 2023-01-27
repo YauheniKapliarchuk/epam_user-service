@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  app-user:
+    image: 'evgkapl/user-service:1.0.0'
+    build:
+      context: .
+    container_name: user-service
+    depends_on:
+      - db-user-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-user-service:5432/user-service-db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    ports:
+      - "8080:8080"
+
+  db-user-service:
+    image: postgres
+    container_name: user_service_db
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: user-service-db
+    ports:
+    - "5438:5432"
+    volumes:
+    - db:/data/user-service-db
+
+volumes:
+  db: {}
